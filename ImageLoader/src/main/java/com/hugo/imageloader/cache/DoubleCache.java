@@ -1,5 +1,6 @@
 package com.hugo.imageloader.cache;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 /**
@@ -12,7 +13,13 @@ import android.graphics.Bitmap;
  */
 public class DoubleCache implements ImageCache {
     MemoryCache mMemoryCache = new MemoryCache();
-    DiskCache mDiskCache = new DiskCache();
+    DiskCache mDiskCache;
+    Context mContext;
+
+    public DoubleCache(Context context) {
+        this.mContext = context;
+        mDiskCache = new DiskCache(mContext);
+    }
 
     // 先从内存缓存中获取图片,如果没有,再从 SD 卡中获取
     @Override

@@ -2,6 +2,7 @@ package com.hugo.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 import com.hugo.imageloader.cache.ImageCache;
 import com.hugo.imageloader.cache.MemoryCache;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
  * Info: 学习 Android 设计模式做 图片加载器 裤子
  */
 public class ImageLoader {
-
+    private static final String TAG = ImageLoader.class.getSimpleName();
     // 图片缓存
     ImageCache mImageCache = new MemoryCache();
     // 线程池,线程数量为 CPU 数量
@@ -44,13 +45,21 @@ public class ImageLoader {
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = downloadImage(url);
+                final Bitmap bitmap = downloadImage(url);
                 if (null == bitmap) {
                     return;
                 }
                 if (imageView.getTag().equals(url)) {
-                    imageView.setImageBitmap(bitmap);
+                    imageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
+                            Log.d(TAG, "View Post 里:" + Thread.currentThread().getName());
+                        }
+                    });
+                    Log.d(TAG, "线程池子里:" + Thread.currentThread().getName());
                 }
+
                 mImageCache.put(url, bitmap);
             }
         });
@@ -68,5 +77,4 @@ public class ImageLoader {
         }
         return bitmap;
     }
-
 }
