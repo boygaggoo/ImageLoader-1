@@ -1,4 +1,4 @@
-package com.hugo.imageloader;
+package com.hugo.imageloader.cache;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
