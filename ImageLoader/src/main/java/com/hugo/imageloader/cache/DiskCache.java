@@ -13,15 +13,17 @@ import java.io.FileOutputStream;
  * GitHub: https://github.com/xcc3641
  * Info:
  */
-public class DiskCache {
+public class DiskCache implements ImageCache {
     static String cacheDir = "sdcard/cache/";
 
     // 从缓存中获取图片
+    @Override
     public Bitmap get(String url) {
         return BitmapFactory.decodeFile(cacheDir + url);
     }
 
     // 讲图片缓存到内存中
+    @Override
     public void put(String url, Bitmap bitmap) {
         FileOutputStream fileOutputStream = null;
 
